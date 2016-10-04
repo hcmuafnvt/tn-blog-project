@@ -1,2 +1,4 @@
-# tn-blog-project
-Toan's blog project
+# Toan's blog project #
+
+## Install
+- Download and install ghost

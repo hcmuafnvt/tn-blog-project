@@ -167,10 +167,7 @@ apiRoutes = function apiRoutes(middleware) {
     );
 
     // ## Crawler
-    router.get('/crawler', function(req, res) {
-        res.json({status: 'success'});
-    });
-
+    router.get('/crawler', api.crawler.submit);
 
     // API Router middleware
     router.use(middleware.api.errorHandler);

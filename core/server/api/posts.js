@@ -168,6 +168,10 @@ posts = {
      * @return {Promise(Post)} Created Post
      */
     add: function add(object, options) {
+        console.log(object);
+        console.log('=======');
+        console.log(options);
+
         var tasks;
 
         /**

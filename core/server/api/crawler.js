@@ -26,7 +26,7 @@ var Promise         = require('bluebird'),
  */
 
 //-----start-------
-var crawler = new simplecrawler("http://vnexpress.net/photo/thoi-su/hien-truong-xe-taxi-no-tung-tren-duong-3478068.html");
+var crawler = new simplecrawler("http://vnexpress.net/photo/thoi-su/ngay-dau-khao-co-noi-nghi-chon-cat-vua-quang-trung-3480411.html");
 
 crawler.on('fetchstart', function(queueItem, resources) {
    console.log('fetchstart %s', queueItem.url);
@@ -55,11 +55,68 @@ crawler.on('queueadd', function(queueItem) {
    console.log('queueadd %s ', queueItem.url);
 });
 
-crawler.on('complete', function() {
-   console.log('++++++++ complete queue++++++++++++++');
+crawler.on("fetchcomplete", function(queueItem, responseBuffer, response) {
+    var self = this;
+    var con = self.wait();
+    console.log(responseBuffer);
+    var $ = cheerio.load(responseBuffer);
+    var $content = $('#article_content');
+    $content.find('a[href="javascript:void(0)"]').remove();
+    var result = toMarkdown($content.html(), {
+      converters: [
+        {
+          filter: 'div',
+          replacement: function(content) {
+            return '\n' + content + '\n\n';
+          }
+        }
+      ]
+    });
+    var object = { posts:
+        [ { title: $('.title_news h1').text(),
+            slug: $('.title_news h1').text(),
+            markdown: result,
+            image: 'http://img.f29.vnecdn.net/2016/10/07/cao-toc-9782-1475829984.jpg',
+            featured: false,
+            page: false,
+            status: 'draft',
+            language: 'en_US',
+            meta_title: null,
+            meta_description: null,
+            author: '1',
+            publishedBy: null,
+            tags: [] }
+        ]
+    };
+
+    var options = { include: 'tags', context: { user: 1, client: null } };
+
+    var tasks;
+
+    /**
+     * ### Model Query
+     * Make the call to the Model layer
+     * @param {Object} options
+     * @returns {Object} options
+     */
+    function modelQuery(options) {
+        return dataProvider.Post.add(options.data.posts[0], _.omit(options, ['data']));
+    }
+
+    // Push all of our tasks into a `tasks` array in the correct order
+    tasks = [
+        utils.validate(docName),
+        utils.handlePermissions(docName, 'add'),
+        utils.convertOptions(allowedIncludes),
+        modelQuery
+    ];
+
+    // Pipeline calls each task passing the result of one to be the arguments for the next
+    pipeline(tasks, object, options).then(function formatResponse(result) {
+        self.queueURL("http://vnexpress.net/photo/thoi-su/ngay-dau-khao-co-noi-nghi-chon-cat-vua-quang-trung-3480411.html", queueItem, false);
+        con();
+    });
 });
-
-
 
 crawler.interval = 10000; // Ten seconds
 crawler.maxConcurrency = 3;
@@ -71,59 +128,8 @@ crawler.decodeResponses=true;
 crawlers = {
     submit: function submit(req, res) {
         crawler.start();
-        crawler.on("fetchcomplete", function(queueItem, responseBuffer, response) {
-            var $ = cheerio.load(responseBuffer);
-            var object = { posts:
-                [ { title: $('.title_news h1').text(),
-                    slug: $('.title_news h1').text(),
-                    markdown: toMarkdown($('#article_content').html()),
-                    image: 'http://img.f29.vnecdn.net/2016/10/03/anh-1-1475489980_660x0.jpg',
-                    featured: false,
-                    page: false,
-                    status: 'draft',
-                    language: 'en_US',
-                    meta_title: null,
-                    meta_description: null,
-                    author: '1',
-                    publishedBy: null,
-                    tags: [] }
-                ]
-            };
-
-            var options = { include: 'tags', context: { user: 1, client: null } };
-
-            var tasks;
-
-            /**
-             * ### Model Query
-             * Make the call to the Model layer
-             * @param {Object} options
-             * @returns {Object} options
-             */
-            function modelQuery(options) {
-                return dataProvider.Post.add(options.data.posts[0], _.omit(options, ['data']));
-            }
-
-            // Push all of our tasks into a `tasks` array in the correct order
-            tasks = [
-                utils.validate(docName),
-                utils.handlePermissions(docName, 'add'),
-                utils.convertOptions(allowedIncludes),
-                modelQuery
-            ];
-
-            console.log('fetch complete');
-
-            // Pipeline calls each task passing the result of one to be the arguments for the next
-            pipeline(tasks, object, options).then(function formatResponse(result) {
-                var post = result.toJSON(options);
-
-                if (post.status === 'published') {
-                    // When creating a new post that is published right now, signal the change
-                    post.statusChanged = true;
-                }
-                res.json({posts: [post]});
-            });
+        crawler.on('complete', function() {
+           res.json({'status': 'success', 'data': 'Crawler completed'});
         });
     }
 };

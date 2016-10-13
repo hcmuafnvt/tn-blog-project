@@ -166,9 +166,6 @@ apiRoutes = function apiRoutes(middleware) {
         api.http(api.uploads.add)
     );
 
-    // ## Crawler
-    router.get('/crawler', api.crawler.submit);
-
     // API Router middleware
     router.use(middleware.api.errorHandler);
 

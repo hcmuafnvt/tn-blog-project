@@ -11,19 +11,34 @@ config = {
     // When running Ghost in the wild, use the production environment.
     // Configure your URL and mail settings here
     production: {
-        url: 'http://my-ghost-blog.com',
+        url: 'http://theherworld.com',
         mail: {},
+        // database: {
+        //     client: 'sqlite3',
+        //     connection: {
+        //         filename: path.join(__dirname, '/content/data/ghost.db')
+        //     },
+        //     debug: false
+        // },
         database: {
-            client: 'sqlite3',
+            client: 'mysql',
             connection: {
-                filename: path.join(__dirname, '/content/data/ghost.db')
-            },
-            debug: false
+                host     : '127.0.0.1',
+                user     : 'root',
+                password : 'tinhoc',
+                database : 'tn_blog_project',
+                charset  : 'utf8'
+            }
         },
 
         server: {
-            host: '127.0.0.1',
+            host: '0.0.0.0',
             port: '2368'
+        },
+        // #### Paths
+        // Specify where your content directory lives
+        paths: {
+            contentPath: path.join(__dirname, '/content/')
         }
     },
 
@@ -55,22 +70,12 @@ config = {
 
         // #### Database
         // Ghost supports sqlite3 (default), MySQL & PostgreSQL
-        // database: {
-        //     client: 'sqlite3',
-        //     connection: {
-        //         filename: path.join(__dirname, '/content/data/ghost-dev.db')
-        //     },
-        //     debug: false
-        // },
         database: {
-            client: 'mysql',
+            client: 'sqlite3',
             connection: {
-                host     : '127.0.0.1',
-                user     : 'root',
-                password : 'tinhoc',
-                database : 'tn_blog_project',
-                charset  : 'utf8'
-            }
+                filename: path.join(__dirname, '/content/data/ghost-dev.db')
+            },
+            debug: false
         },
 
         // #### Server

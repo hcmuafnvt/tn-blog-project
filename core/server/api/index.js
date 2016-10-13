@@ -25,7 +25,6 @@ var _              = require('lodash'),
     uploads        = require('./upload'),
     exporter       = require('../data/export'),
     slack          = require('./slack'),
-    crawler        = require('./crawler'),
 
     http,
     addHeaders,
@@ -291,7 +290,6 @@ module.exports = {
     authentication: authentication,
     uploads: uploads,
     slack: slack,
-    crawler: crawler,
     themes: themes
 };
 

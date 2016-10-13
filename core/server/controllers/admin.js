@@ -7,13 +7,6 @@ var _             = require('lodash'),
     adminControllers;
 
 adminControllers = {
-    // Route: crawler
-    // Path: /ghost/
-    // Method: GET
-    crawler: function index(req, res) {
-        res.render('crawler');
-    },
-
     // Route: index
     // Path: /ghost/
     // Method: GET

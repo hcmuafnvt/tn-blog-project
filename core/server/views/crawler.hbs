@@ -14,19 +14,19 @@
     <script src="{{asset "jquery-3.1.1.min.js" ghost="true" minifyInProduction="true"}}"></script>
 
     <script>
-    $(function() {
-        $('#btnCrawler').click(function(e) {
-            e.preventDefault();
+        $(function() {
+            $('#btnCrawler').click(function(e) {
+                e.preventDefault();
 
-            $.ajax({
-                url: '/ghost/api/v0.1/crawler',
-                method: 'GET',
-                success: function(data) {
-                    console.log(data);
-                }
+                $.ajax({
+                    url: '/ghost/api/v0.1/crawler',
+                    method: 'GET',
+                    success: function(data) {
+                        console.log(data);
+                    }
+                });
             });
         });
-    });
     </script>
 </body>
 </html>

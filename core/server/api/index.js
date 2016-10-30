@@ -25,7 +25,7 @@ var _              = require('lodash'),
     uploads        = require('./upload'),
     exporter       = require('../data/export'),
     slack          = require('./slack'),
-    crawler        = require('./crawler'),
+    crawler        = require('../crawler/api'),
 
 
     http,

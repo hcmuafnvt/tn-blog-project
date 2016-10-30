@@ -59,6 +59,10 @@ function initDbHashAndFirstRun() {
 // Sets up the express server instances, runs init on a bunch of stuff, configures views, helpers, routes and more
 // Finally it returns an instance of GhostServer
 function init(options) {
+    //connect mongodb
+    var mongodb = require('./crawler/connectdb');
+    mongodb.init();
+
     options = options || {};
 
     var ghostServer = null, settingsMigrations, currentDatabaseVersion;

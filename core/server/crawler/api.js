@@ -3,7 +3,22 @@ var Post = require('./post.model'),
     crawler = require('./crawler')
 
 function get(req, res) {
-    crawler.start();
+    Post.find(function(err, posts) {
+        if(err) {
+            res.json({err: err});
+            return;
+        }
+
+        res.json(posts);
+    });
+}
+
+function crawl(req, res) {
+    crawler.start(req.body).then(function(data) {
+        res.json(data);
+    }).catch(function(err) {
+        res.json({error: err});
+    });
 
     // Post.create({
     //     title: 'test 1',
@@ -20,11 +35,11 @@ function get(req, res) {
 
     //     res.json(post);
     // });
-    res.json('done');
 }
 
 var instance = {
-    get: get
+    get: get,
+    crawl: crawl
 };
 
 module.exports = instance;

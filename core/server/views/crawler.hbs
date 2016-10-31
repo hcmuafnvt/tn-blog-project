@@ -6,27 +6,52 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
     <title>Ghost Admin</title>
+    <link rel="stylesheet" href="{{asset "bootstrap.min.css" ghost="true" minifyInProduction="true"}}" />
 </head>
 <body>
-    <h1>Crawler</h1>
-    <button id="btnCrawler">Submit</button>
+    <div class="container">
+        <h2>Crawling Tool</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <form>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Url</label>
+                        <input type="text" class="form-control" id="txtUrl" placeholder="Url">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Title Class</label>
+                        <input type="text" class="form-control" id="txtTitle" placeholder="Title class">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Content Class</label>
+                        <input type="text" class="form-control" id="txtContent" placeholder="Content Class">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Max Depth</label>
+                        <select id="ddlMaxDepth" class="form-control">
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
+                    <button type="button" id="btnCancel" class="btn btn-warning">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <h2>Crawled Contents</h2>
+        <table id="listPosts" class="clearfix table table-hover">
+            <th class="col-md-2">Image</th>
+            <th class="col-md-7">Title</th>
+            <th class="col-md-1">Saved</th>
+            <th class="col-md-2">Actions</th>
+            <!-- append <tr> here -->
+        </table>
+    </div>
+
 
     <script src="{{asset "jquery-3.1.1.min.js" ghost="true" minifyInProduction="true"}}"></script>
-
-    <script>
-        $(function() {
-            $('#btnCrawler').click(function(e) {
-                e.preventDefault();
-
-                $.ajax({
-                    url: '/ghost/api/v0.1/crawler',
-                    method: 'GET',
-                    success: function(data) {
-                        console.log(data);
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="{{asset "crawler.js" ghost="true" minifyInProduction="true"}}"></script>
 </body>
 </html>

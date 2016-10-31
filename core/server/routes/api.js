@@ -168,6 +168,7 @@ apiRoutes = function apiRoutes(middleware) {
 
     // ## Crawler
     router.get('/crawler', api.crawler.get);
+    router.post('/crawler', api.crawler.crawl);
 
     // API Router middleware
     router.use(middleware.api.errorHandler);

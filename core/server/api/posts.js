@@ -122,7 +122,6 @@ posts = {
      */
     edit: function edit(object, options) {
         var tasks;
-console.log(object);
         /**
          * ### Model Query
          * Make the call to the Model layer
@@ -130,7 +129,6 @@ console.log(object);
          * @returns {Object} options
          */
         function modelQuery(options) {
-            console.log(options.data.posts[0]);
             return dataProvider.Post.edit(options.data.posts[0], _.omit(options, ['data']));
         }
 

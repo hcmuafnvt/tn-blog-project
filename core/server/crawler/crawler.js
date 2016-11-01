@@ -2,7 +2,8 @@ var simplecrawler = require("simplecrawler"),
       cheerio = require('cheerio'),
       fs = require('fs'),
       path = require('path'),
-      syncrequest = require('sync-request');
+      syncrequest = require('sync-request'),
+      Post = require('./post.model');
 
 var images = [];
 
@@ -31,6 +32,7 @@ function start(options) {
    });
 
    crawler.on("fetchcomplete", function(queueItem, responseBuffer, response) {
+      var con = this.wait();
       console.log('queueItem.depth >', queueItem.depth);
       var self = this;
       var $ = cheerio.load(responseBuffer);
@@ -46,22 +48,38 @@ function start(options) {
 
       //var $title = $('.title-content h1');
       var $title = $(options.titleClass);
-      console.log('>', $title.text());
 
       //var $images = $('.journal-content-article img');
-      var $images = $(options.imageClass);
+      // var $images = $(options.imageClass);
+      //
+      // if (!fs.existsSync(imagefolderPath)){
+      //    fs.mkdirSync(imagefolderPath);
+      // }
+      // $images.each(function(index) {
+      //    var url = $(this).attr('src');
+      //    var imgName = url.substring(url.lastIndexOf('/') + 1, url.length);
+      //    var fileName = imagefolderPath + imgName;
+      //    console.log(fileName);
+      //
+      //    var res = syncrequest('GET', url);
+      //    fs.writeFileSync(fileName, res.getBody());
+      // });
 
-      if (!fs.existsSync(imagefolderPath)){
-         fs.mkdirSync(imagefolderPath);
-      }
-      $images.each(function(index) {
-         var url = $(this).attr('src');
-         var imgName = url.substring(url.lastIndexOf('/') + 1, url.length);
-         var fileName = imagefolderPath + imgName;
-         console.log(fileName);
+      var postData = {
+         imageurl: getItemInArray(queueItem.url, images),
+         title: $title.text(),
+         htmlcontent: $(options.contentClass)
+      };
+      console.log(postData);
 
-         var res = syncrequest('GET', url);
-         fs.writeFileSync(fileName, res.getBody());
+      Post.create(postData, function(err, post) {
+         if(err) {
+            console.log(err);
+            return;
+            con();
+         }
+         con();
+         console.log(post);
       });
    });
 

@@ -4,7 +4,7 @@
          url: '/ghost/api/v0.1/crawler',
          method: 'GET',
          success: function(posts) {
-            for(let i=0; i < posts.length; i++) {
+            for(var i=0; i < posts.length; i++) {
                $('#listPosts').append(generatePost(posts[i]));
             }
 
@@ -21,6 +21,9 @@
 
          var data = {
             url: $('#txtUrl').val(),
+            landingPageItemClass: $('#txtLandingPageItemClass').val(),
+            discoverClass: $('#txtDiscoverClass').val(),
+            imageClass: $('#txtImageClass').val(),
             titleClass: $('#txtTitle').val(),
             contentClass: $('#txtContent').val(),
             maxDepth: $('#ddlMaxDepth').val()

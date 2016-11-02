@@ -1,45 +1,39 @@
 'use strict';
 var Post = require('./post.model'),
-    crawler = require('./crawler')
+crawler = require('./crawler')
 
 function get(req, res) {
-    Post.find(function(err, posts) {
-        if(err) {
-            res.json({err: err});
-            return;
-        }
+   Post.find(function(err, posts) {
+      if(err) {
+         res.json({err: err});
+         return;
+      }
 
-        res.json(posts);
-    });
+      res.json(posts);
+   });
 }
 
 function crawl(req, res) {
-    crawler.start(req.body).then(function(data) {
-        res.json(data);
-    }).catch(function(err) {
-        res.json({error: err});
-    });
+   crawler.start(req.body).then(function(data) {
+      res.json(data);
+   }).catch(function(err) {
+      res.json({error: err});
+   });
+}
 
-    // Post.create({
-    //     title: 'test 1',
-    //     desc: 'des',
-    //     markdown: '# markdown',
-    //     htmlcontent: '<p>html content</p>',
-    //     imageurl: 'image url',
-    //     saved_to_theherworld: true
-    // }, function(err, post) {
-    //     if(err) {
-    //        console.log(err);
-    //        return;
-    //     }
-
-    //     res.json(post);
-    // });
+function savePostToGhost (req, res) {
+   crawler.savePostToGhost(req.body.id).then(function(data) {
+      res.json(data);
+   }).catch(function(err) {
+      console.log(err);
+      res.json({err: err});
+   });
 }
 
 var instance = {
-    get: get,
-    crawl: crawl
+   get: get,
+   crawl: crawl,
+   savePostToGhost: savePostToGhost
 };
 
 module.exports = instance;

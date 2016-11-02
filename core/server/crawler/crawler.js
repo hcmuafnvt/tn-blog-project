@@ -1,9 +1,12 @@
 var simplecrawler = require("simplecrawler"),
-      cheerio = require('cheerio'),
-      fs = require('fs'),
-      path = require('path'),
-      syncrequest = require('sync-request'),
-      Post = require('./post.model');
+cheerio = require('cheerio'),
+fs = require('fs'),
+path = require('path'),
+syncrequest = require('sync-request'),
+toMarkdown = require('to-markdown'),
+Post = require('./post.model'),
+posts = require('../api/posts');
+
 
 var images = [];
 
@@ -71,7 +74,6 @@ function start(options) {
          title: $title.text(),
          htmlcontent: $(options.contentClass).html()
       };
-      console.log(postData);
 
       if(postData.title !== '') {
          Post.create(postData, function(err, post) {
@@ -128,6 +130,57 @@ function getItemInArray(id, arr) {
    });
 }
 
+function savePostToGhost (id) {
+   var promise = new Promise(function(resolve, reject) {
+      Post.find({_id: id}, function(err, post) {
+         if(err) {
+            console.log(err);
+            return;
+         }
+
+         //var $ = cheerio.load(post.htmlcontent);
+         //$('a[href="javascript:void(0)"]').remove();
+         // var result = toMarkdown(post.htmlcontent, {
+         //    converters: [
+         //       {
+         //          filter: 'div',
+         //          replacement: function(content) {
+         //             return '\n' + content + '\n\n';
+         //          }
+         //       }
+         //    ]
+         // });
+
+         var object = { posts:
+            [ { title: post.title,
+            slug: post.title,
+            markdown: post.htmlcontent,
+            image: post.imageurl,
+            featured: false,
+            page: false,
+            status: 'draft',
+            language: 'en_US',
+            meta_title: null,
+            meta_description: null,
+            author: '1',
+            publishedBy: null,
+            tags: [] }
+         ]}
+         var options = { include: 'tags', context: { user: 1, client: null } };
+
+         posts.add(post, options).tap(function onSuccess(response) {
+            resolve(response);
+         }).then(function then(response) {
+            resolve(response);
+         }).catch(function onAPIError(error) {
+            reject(error);
+         });
+      });
+   });
+
+   return promise;
+}
+
 function getBody(encoding) {
    if (this.statusCode >= 300) {
       var err = new Error('Server responded with status code ' + this.statusCode + ':\n' + this.body.toString(encoding));
@@ -140,7 +193,8 @@ function getBody(encoding) {
 }
 
 var instance = {
-   start: start
+   start: start,
+   savePostToGhost: savePostToGhost
 };
 
 module.exports = instance;

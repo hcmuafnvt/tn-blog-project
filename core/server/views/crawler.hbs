@@ -7,61 +7,66 @@
 
    <title>Ghost Admin</title>
    <link rel="stylesheet" href="{{asset "bootstrap.min.css" ghost="true" minifyInProduction="true"}}" />
+   <link rel="stylesheet" href="{{asset "crawler.css" ghost="true" minifyInProduction="true"}}" />
 </head>
 <body>
    <div class="container">
-      <h2>Crawling Tool</h2>
-      <div class="row">
-         <div class="col-md-6">
-            <form>
-               <div class="form-group">
-                  <label for="txtUrl">Url</label>
-                  <input type="text" class="form-control" id="txtUrl" placeholder="Url" value="http://suckhoe.vn/lam-dep/tang-can-giam-can">
-               </div>
-               <div class="form-group">
-                  <label for="txtLandingPageItemClass">Landing Page Item Class</label>
-                  <input type="text" class="form-control" id="txtLandingPageItemClass" placeholder="Landing Page Item Class" value=".assetdesc-img">
-               </div>
-               <div class="form-group">
-                  <label for="txtDiscoverClass">Discover Class</label>
-                  <input type="text" class="form-control" id="txtDiscoverClass" placeholder="Discover Class" value=".main-content .assettile a">
-               </div>
-               <div class="form-group">
-                  <label for="txtImageClass">Image Class</label>
-                  <input type="text" class="form-control" id="txtImageClass" placeholder="Image Class" value=".journal-content-article img">
-               </div>
-               <div class="form-group">
-                  <label for="txtTitle">Title Class</label>
-                  <input type="text" class="form-control" id="txtTitle" placeholder="Title class" value=".title-content h1">
-               </div>
-               <div class="form-group">
-                  <label for="txtContent">Content Class</label>
-                  <input type="text" class="form-control" id="txtContent" placeholder="Content Class" value=".journal-content-article">
-               </div>
-               <div class="form-group">
-                  <label for="ddlMaxDepth">Max Depth</label>
-                  <select id="ddlMaxDepth" class="form-control">
-                     <option value="1">1</option>
-                     <option value="2">2</option>
-                  </select>
-               </div>
+      <section id="crawler">
+         <h2>Crawling Tool</h2>
+         <div class="row">
+            <div class="col-md-6">
+               <form>
+                  <div class="form-group">
+                     <label for="txtUrl">Url</label>
+                     <input type="text" class="form-control" id="txtUrl" placeholder="Url" value="http://suckhoe.vn/lam-dep/tang-can-giam-can">
+                  </div>
+                  <div class="form-group">
+                     <label for="txtLandingPageItemClass">Landing Page Item Class</label>
+                     <input type="text" class="form-control" id="txtLandingPageItemClass" placeholder="Landing Page Item Class" value=".assetdesc-img">
+                  </div>
+                  <div class="form-group">
+                     <label for="txtDiscoverClass">Discover Class</label>
+                     <input type="text" class="form-control" id="txtDiscoverClass" placeholder="Discover Class" value=".main-content .assettile a">
+                  </div>
+                  <div class="form-group">
+                     <label for="txtImageClass">Image Class</label>
+                     <input type="text" class="form-control" id="txtImageClass" placeholder="Image Class" value=".journal-content-article img">
+                  </div>
+                  <div class="form-group">
+                     <label for="txtTitle">Title Class</label>
+                     <input type="text" class="form-control" id="txtTitle" placeholder="Title class" value=".title-content h1">
+                  </div>
+                  <div class="form-group">
+                     <label for="txtContent">Content Class</label>
+                     <input type="text" class="form-control" id="txtContent" placeholder="Content Class" value=".journal-content-article">
+                  </div>
+                  <div class="form-group">
+                     <label for="ddlMaxDepth">Max Depth</label>
+                     <select id="ddlMaxDepth" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                     </select>
+                  </div>
 
-               <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
-               <button type="button" id="btnCancel" class="btn btn-warning">Cancel</button>
-            </form>
+                  <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
+                  <button type="button" id="btnCancel" class="btn btn-warning">Cancel</button>
+               </form>
+            </div>
          </div>
-      </div>
 
-      <h2>Crawled Contents</h2>
-      <table id="listPosts" class="clearfix table table-hover">
-         <th class="col-md-2">Image</th>
-         <th class="col-md-7">Title</th>
-         <th class="col-md-1">Saved</th>
-         <th class="col-md-2">Actions</th>
-         <!-- append <tr> here -->
-      </table>
+         <h2>Crawled Contents</h2>
+         <table id="listPosts" class="clearfix table table-hover">
+            <th>Image</th>
+            <th>Title</th>
+            <th>Saved</th>
+            <th>Actions</th>
+            <!-- append <tr> here -->
+         </table>
+      </section>
+      <section id="edit">
+
+      </section>
    </div>
-
 
    <script src="{{asset "jquery-3.1.1.min.js" ghost="true" minifyInProduction="true"}}"></script>
    <script src="{{asset "crawler.js" ghost="true" minifyInProduction="true"}}"></script>

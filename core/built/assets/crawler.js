@@ -1,7 +1,7 @@
 (function() {
    function bindPosts() {
       $.ajax({
-         url: '/ghost/api/v0.1/crawler',
+         url: '/ghost/api/v0.1/crawler/getposts',
          method: 'GET',
          success: function(posts) {
             for(var i=0; i < posts.length; i++) {
@@ -30,16 +30,16 @@
          }
 
          $.ajax({
-            url: '/ghost/api/v0.1/crawler',
+            url: '/ghost/api/v0.1/crawler/submit',
             method: 'POST',
             data: data,
             beforeSend: function() {
-               $self.text('Submitting...')
+               $self.text('Submitting...');
                $self.attr('disabled', 'disabled');
             },
             success: function(res) {
                console.log(res);
-               $self.text('Submit')
+               $self.text('Submit');
                $self.removeAttr('disabled');
             },
             fail: function(err) {
@@ -51,10 +51,39 @@
       })
    }
 
+   function savePostToGhost () {
+      $('#crawler').on('click', '.btn-save', function(e) {
+         e.preventDefault();
+         var $self = $(this);
+
+         var data = {
+            id: $self.closest('tr').data('id')
+         };
+
+         $.ajax({
+            url: '/ghost/api/v0.1/crawler/saveposttoghost',
+            method: 'POST',
+            data: data,
+            beforeSend: function() {
+               $self.text('Saving...');
+               $self.attr('disabled', 'disabled');
+            },
+            success: function(res) {
+               console.log(res);
+               $self.text('Save');
+               $self.removeAttr('disabled');
+            },
+            fail: function(err) {
+               console.log(err);
+            }
+         });
+      });
+   }
+
    //private function
    function generatePost(post) {
-      return `<tr>
-                  <td><img src="${post.imageurl}"></td>
+      return `<tr data-id="${post._id}">
+                  <td><div class="product-image" style=""><img src="${post.imageurl}"></div></td>
                   <td>${post.title}</td>
                   <td>
                     <div class="checkbox">
@@ -64,8 +93,8 @@
                     </div>
                   </td>
                   <td>
-                    <button type="button" class="btn btn-link">Save</button>
-                    <button type="button" class="btn btn-link">Delete</button>
+                    <button type="button" class="btn btn-link btn-save">Save</button>
+                    <button type="button" class="btn btn-link btn-delete">Delete</button>
                   </td>
                </tr>`;
    }
@@ -73,5 +102,6 @@
    $(function() {
       bindPosts();
       crawl();
+      savePostToGhost();
    });
 })();

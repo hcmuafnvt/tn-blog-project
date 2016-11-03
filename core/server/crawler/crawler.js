@@ -5,7 +5,7 @@ path = require('path'),
 syncrequest = require('sync-request'),
 toMarkdown = require('to-markdown'),
 Post = require('./post.model'),
-posts = require('../api/posts');
+postAPIs = require('../api/posts');
 
 
 var images = [];
@@ -132,43 +132,46 @@ function getItemInArray(id, arr) {
 
 function savePostToGhost (id) {
    var promise = new Promise(function(resolve, reject) {
-      Post.find({_id: id}, function(err, post) {
+      Post.findById(id, function(err, post) {
          if(err) {
             console.log(err);
             return;
          }
 
-         //var $ = cheerio.load(post.htmlcontent);
-         //$('a[href="javascript:void(0)"]').remove();
-         // var result = toMarkdown(post.htmlcontent, {
-         //    converters: [
-         //       {
-         //          filter: 'div',
-         //          replacement: function(content) {
-         //             return '\n' + content + '\n\n';
-         //          }
-         //       }
-         //    ]
-         // });
+         // var $ = cheerio.load(post.htmlcontent);
+         // $('a[href="javascript:void(0)"]').remove();
+         var result = toMarkdown(post.htmlcontent, {
+            converters: [
+               {
+                  filter: 'div',
+                  replacement: function(content) {
+                     return '\n' + content + '\n\n';
+                  }
+               }
+            ]
+         });
 
-         var object = { posts:
-            [ { title: post.title,
-            slug: post.title,
-            markdown: post.htmlcontent,
-            image: post.imageurl,
-            featured: false,
-            page: false,
-            status: 'draft',
-            language: 'en_US',
-            meta_title: null,
-            meta_description: null,
-            author: '1',
-            publishedBy: null,
-            tags: [] }
-         ]}
+         var object = {
+            posts: [
+               {
+                  title: post.title,
+                  slug: post.title,
+                  markdown: result,
+                  image: post.imageurl,
+                  featured: false,
+                  page: false,
+                  status: 'draft',
+                  language: 'en_US',
+                  meta_title: null,
+                  meta_description: null,
+                  author: '1',
+                  publishedBy: null,
+                  tags: []
+               }
+            ]
+         };
          var options = { include: 'tags', context: { user: 1, client: null } };
-
-         posts.add(post, options).tap(function onSuccess(response) {
+         postAPIs.add(object, options).tap(function onSuccess(response) {
             resolve(response);
          }).then(function then(response) {
             resolve(response);

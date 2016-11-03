@@ -168,6 +168,7 @@ apiRoutes = function apiRoutes(middleware) {
 
     // ## Crawler
     router.get('/crawler/getposts', api.crawler.get);
+    router.get('/crawler/getbyid/:id', api.crawler.getbyid);
     router.post('/crawler/submit', api.crawler.crawl);
     router.post('/crawler/saveposttoghost', api.crawler.savePostToGhost);
 

@@ -5,7 +5,9 @@ path = require('path'),
 syncrequest = require('sync-request'),
 toMarkdown = require('to-markdown'),
 Post = require('./post.model'),
-postAPIs = require('../api/posts');
+postAPIs = require('../api/posts'),
+mkdirp = require('mkdirp'),
+slugify = require('slugify');
 
 
 var images = [];
@@ -44,6 +46,10 @@ function start(options) {
       var month = d.getMonth() + 1;
       var year = d.getFullYear();
       var imagefolderPath = path.resolve(process.cwd()) + '/content/images/' + year + '/' + month + '/';
+      if (!fs.existsSync(imagefolderPath)){
+         mkdirp.sync(imagefolderPath)
+         //fs.mkdirSync(imagefolderPath);
+      }
 
       if(queueItem.depth === 1) {
          getItemImageOnLandingPage($(options.landingPageItemClass), imagefolderPath);
@@ -54,10 +60,7 @@ function start(options) {
 
       //var $images = $('.journal-content-article img');
       // var $images = $(options.imageClass);
-      //
-      // if (!fs.existsSync(imagefolderPath)){
-      //    fs.mkdirSync(imagefolderPath);
-      // }
+
       // $images.each(function(index) {
       //    var url = $(this).attr('src');
       //    var imgName = url.substring(url.lastIndexOf('/') + 1, url.length);
@@ -72,6 +75,7 @@ function start(options) {
       var postData = {
          imageurl: items.length > 0 ? items[0].imageurl : '',
          title: $title.text(),
+         slug: slugify($title.text()),
          htmlcontent: $(options.contentClass).html()
       };
 
@@ -113,8 +117,6 @@ function getItemImageOnLandingPage($items, imagefolderPath) {
          link: $('a').attr('href')
       });
    });
-
-   console.log(images);
 }
 
 function donwloadImage (url, imagefolderPath) {
@@ -183,6 +185,29 @@ function savePostToGhost (id) {
 
    return promise;
 }
+
+function convertToSlug(text)
+{
+    return text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
+}
+
+var slug = function(str) {
+  str = str.replace(/^\s+|\s+$/g, ''); // trim
+  str = str.toLowerCase();
+
+  // remove accents, swap ñ for n, etc
+  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+  var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+  for (var i=0, l=from.length ; i<l ; i++) {
+    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+  }
+
+  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+    .replace(/-+/g, '-'); // collapse dashes
+
+  return str;
+};
 
 function getBody(encoding) {
    if (this.statusCode >= 300) {

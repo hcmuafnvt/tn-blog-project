@@ -13,6 +13,17 @@ function get(req, res) {
    });
 }
 
+function getbyid(req, res) {
+   Post.findById(req.params.id, function(err, post) {
+      if(err) {
+         res.json({err: err});
+         return;
+      }
+
+      res.json(post);
+   });
+}
+
 function crawl(req, res) {
    crawler.start(req.body).then(function(data) {
       res.json(data);
@@ -32,6 +43,7 @@ function savePostToGhost (req, res) {
 
 var instance = {
    get: get,
+   getbyid: getbyid,
    crawl: crawl,
    savePostToGhost: savePostToGhost
 };

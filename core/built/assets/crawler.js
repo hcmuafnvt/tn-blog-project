@@ -7,9 +7,6 @@
             for(var i=0; i < posts.length; i++) {
                $('#listPosts').append(generatePost(posts[i]));
             }
-
-            //$('#listPosts').append(tr);
-            console.log(posts);
          }
       });
    }
@@ -52,7 +49,7 @@
    }
 
    function savePostToGhost () {
-      $('#crawler').on('click', '.btn-save', function(e) {
+      $('#section-crawler').on('click', '.btn-save', function(e) {
          e.preventDefault();
          var $self = $(this);
 
@@ -94,14 +91,41 @@
                   </td>
                   <td>
                     <button type="button" class="btn btn-link btn-save">Save</button>
+                    <button type="button" class="btn btn-link btn-edit">Edit</button>
                     <button type="button" class="btn btn-link btn-delete">Delete</button>
                   </td>
                </tr>`;
    }
 
+   function editPost () {
+      $('#section-crawler').on('click', '.btn-edit', function(e) {
+         e.preventDefault();
+         var $self = $(this);
+         $.ajax({
+            url: '/ghost/api/v0.1/crawler/getbyid/' + $self.closest('tr').data('id'),
+            method: 'GET',
+            success: function(post) {
+               $('#section-crawler').hide();
+
+               $('#edit-image').attr('src', post.imageurl);
+               $('#edit-title').val(post.title);
+               $('#edit-slug').val(post.slug);
+               tinymce.get('edit-content').setContent(post.htmlcontent);
+               //$('#edit-content').html(post.htmlcontent);
+               $('#section-edit').show();
+            }
+         });
+      });
+   }
+
    $(function() {
+      tinymce.init({
+         selector: 'textarea',
+         height: 700,
+      });
       bindPosts();
       crawl();
       savePostToGhost();
+      editPost();
    });
 })();

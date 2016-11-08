@@ -5,10 +5,7 @@ var mongoose = require('mongoose');
 var PostSchema = new mongoose.Schema({
    title: {
       type: String
-   },
-   slug: {
-      type: String
-   },
+   },   
    tags: {
       type: String
    },

@@ -1,4 +1,4 @@
-function generateSpun(text){
+function generateSpin(text){
       var result = text;
     var pattern = /{([^{}]*)}/g;
     match = pattern.exec(text);
@@ -24,7 +24,7 @@ function getRandomInt(min, max) {
 }
 
 var str = "{Hello|What's Up|Howdy} {world|planet} | {Goodbye|Later} {people|citizens|inhabitants}";
-generateSpun(str);
+generateSpin(str);
 
 ////////////////////////
 //create map Obj

@@ -6,8 +6,7 @@ syncrequest = require('sync-request'),
 toMarkdown = require('to-markdown'),
 Post = require('./post.model'),
 postAPIs = require('../api/posts'),
-mkdirp = require('mkdirp'),
-slugify = require('slugify');
+mkdirp = require('mkdirp');
 
 
 var images = [];
@@ -74,8 +73,7 @@ function start(options) {
       var items = getItemInArray(queueItem.url, images);
       var postData = {
          imageurl: items.length > 0 ? items[0].imageurl : '',
-         title: $title.text(),
-         slug: slugify($title.text()),
+         title: $title.text(),         
          htmlcontent: $(options.contentClass).html()
       };
 
@@ -97,7 +95,7 @@ function start(options) {
    crawler.decodeResponses=true;
 
    crawler.start();
-
+    
    var promise = new Promise(function(resolve, reject) {
       crawler.on('complete', function() {
          console.log('Crawler completed');
@@ -156,8 +154,7 @@ function savePostToGhost (id) {
          var object = {
             posts: [
                {
-                  title: post.title,
-                  slug: post.title,
+                  title: post.title,                  
                   markdown: result,
                   image: post.imageurl,
                   featured: false,
@@ -185,29 +182,6 @@ function savePostToGhost (id) {
 
    return promise;
 }
-
-function convertToSlug(text)
-{
-    return text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
-}
-
-var slug = function(str) {
-  str = str.replace(/^\s+|\s+$/g, ''); // trim
-  str = str.toLowerCase();
-
-  // remove accents, swap ñ for n, etc
-  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
-  var to   = "aaaaaeeeeeiiiiooooouuuunc------";
-  for (var i=0, l=from.length ; i<l ; i++) {
-    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
-  }
-
-  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-    .replace(/\s+/g, '-') // collapse whitespace and replace by -
-    .replace(/-+/g, '-'); // collapse dashes
-
-  return str;
-};
 
 function getBody(encoding) {
    if (this.statusCode >= 300) {

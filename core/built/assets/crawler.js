@@ -122,9 +122,26 @@
 
   function spintContent() {
     $('#frmEditPost').on('click', '#btn-edit-spin', function() {
-      var result = window.spinDataUtil.updateContentWithCurlyBrackets(tinymce.get('edit-content').getContent());
-      console.log(result);
-      tinymce.get('edit-content').setContent(result);
+      var content = '<div>' + tinymce.get('edit-content').getContent({format : 'raw'}) + '</div>';
+      var $content = $(content);      
+      //console.log($content);
+      $content.children('*').each(function(index, ele) {
+        console.log($(ele));
+        //console.log($(ele).children('*').length);
+        if($(ele).find('img').length === 0) {
+          $(ele).html(window.spinDataUtil.updateContentWithCurlyBrackets($(ele).html()));
+        }        
+      });
+
+      //console.log($content.html());
+      tinymce.get('edit-content').setContent($content.html());
+      //console.log($content.html());
+      // var result = window.spinDataUtil.updateContentWithCurlyBrackets(tinymce.get('edit-content').getContent({format : 'raw'}));
+      // console.log(result);
+      // console.log(window.spinDataUtil.updateContentWithCurlyBrackets(tinymce.get('edit-content').getContent()));
+      // var $result = $('<div></div>').append(result);      
+      // console.log($result.find('p').length);
+      //tinymce.get('edit-content').setContent(result);
       //console.log(window.spinDataUtil.updateContentWithCurlyBrackets());
     });
   }
